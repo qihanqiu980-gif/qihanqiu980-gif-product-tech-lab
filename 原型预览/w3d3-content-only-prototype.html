@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>W3D3 内容替换原型 - 用户与订单基础查询</title>
+  <link rel="stylesheet" href="../src/components/W11D1Day01CourseView.css">
+  <style>
+    .day01-course svg path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#05283a;">
+  <article class="day01-course" data-device="desktop" aria-labelledby="W3D3-title">
+    <aside class="w1-global-sidebar" aria-label="主要导航">
+      <button class="w1-global-brand" type="button" aria-label="产品技术实验室">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 7.5h9v9H5zM18 7.5h9M18 12h9M18 16.5h6M5 20.5h22M5 25h15"></path></svg>
+        <span><strong>产品技术</strong><small>实验室</small></span>
+      </button>
+      <nav class="w1-global-nav">
+        <button type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v14H4zM8 3.5v4M16 3.5v4M4 9.5h16M8 13h3M8 16h6"></path></svg><span>今日</span></button>
+        <button type="button" class="is-current" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3zM8 4.5v15M11 9h5M11 12h5"></path></svg><span>课程</span></button>
+        <button type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8a8 8 0 1 1-1 7M5 8V3M5 8h5M12 7v5l3 2"></path></svg><span>复盘</span></button>
+        <button type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9M12 19V5M19 19v-7M3 19.5h18"></path></svg><span>进度</span></button>
+        <button type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h10a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3zM8 4.5v15M11 9h4M11 12h3"></path></svg><span>概念</span></button>
+      </nav>
+      <div class="w1-global-footer">
+        <div class="w1-weight-key" aria-label="学习能力权重"><span><i></i>数据 40%</span><span><i></i>沟通 30%</span><span><i></i>评审 30%</span></div>
+        <button class="w1-archive-action" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 11l4 4 4-4M5 19h14"></path></svg><span>旧课档案</span></button>
+      </div>
+    </aside>
+
+    <div class="w1-window">
+      <header class="w1-appbar"><button type="button" class="w1-brand"><span class="w1-brand-mark">PL</span><strong>产品技术实验室</strong></button><span class="w1-appbar-meta">COURSE / W3D3</span></header>
+      <div class="w1-shell">
+        <main class="w1-main">
+          <header class="course-cover">
+            <div>
+              <p class="eyebrow">WEEK 3 · DAY 3 · 双时段课程</p>
+              <h1 id="W3D3-title">用户与订单基础查询</h1>
+              <p class="subtitle">今天只学一件事：把“我想看某类订单”翻译成一条能在本地 orders 表跑通的单表 SQL，并用结果说明它能证明什么、不能证明什么。</p>
+            </div>
+            <div class="cover-summary" aria-label="课程时间与进度">
+              <div class="cover-summary-head"><strong>92 分钟</strong><span>建议分两次完成</span></div>
+              <div class="cover-progress"><i style="width:0%"></i></div>
+              <div class="cover-summary-labels"><span>本次专注 45 分钟</span><span>两时段 · 七章</span></div>
+              <div class="cover-evidence"><span>已学习 0/7</span><span>练习通过 0/7</span><span>待复核复述 0/7</span><span>掌握未判定</span></div>
+            </div>
+          </header>
+
+          <section class="session-strip" aria-label="两个学习时段">
+            <div class="session-card"><strong>第一时段 · 46 分钟</strong><span>看见 orders 表、把业务问题翻译成 WHERE、日期边界与可读结果。</span></div>
+            <div class="session-card"><strong>第二时段 · 46 分钟</strong><span>完成 6 道基础查询、修正常见误判、沉淀 basic-query-log.md。</span></div>
+          </section>
+
+          <div class="course-protocol">
+            <span>用户与订单基础查询</span>
+            <p>本课只读取本地教学模拟 orders 表。今天不连接真实数据库、不读取公司数据、不提前复制 answers.sql，也不把样本结果写成数据质量、聚合、GROUP BY、JOIN 或业务指标结论。</p>
+          </div>
+
+          <div class="manuscript">
+            <section id="w3d3-chapter-1" class="framework-chapter" data-framework-chapter="chapter-1" tabindex="-1">
+              <header class="chapter-head">
+                <div><span>SESSION 01 · CHAPTER 01</span><h2>建立任务：先看见今天要查的对象</h2><p>产品问题不能直接被数据库理解。今天先把“看订单”变成一个有表、有字段、有条件、有结果边界的查询动作。</p></div><strong>8 MIN</strong>
+              </header>
+              <div class="scenario-copy">
+                <p><b>你的角色</b>你是刚能解释 SELECT 顺序的产品经理实习生。</p>
+                <p><b>发生了什么</b>数据同事给了本地 orders 教学表，希望你先完成 6 个基础问题：已支付订单、渠道订单、某天订单、最近订单、可读列名和渠道取值。</p>
+                <blockquote>今天学会的是：把一个具体订单问题写成 SQL，看懂返回的行，并知道这条结果不能替我证明什么。</blockquote>
+                <p><b>为什么重要</b>如果条件、日期边界、排序或别名写错，后续数据质量判断、取数需求和指标讨论都会建立在不稳的查询证据上。</p>
+              </div>
+
+              <div class="plain-section">
+                <h3>先看 orders 表样本</h3>
+                <div class="system-console" aria-label="orders 表样本">
+                  <table>
+                    <thead><tr><th>order_id</th><th>user_id</th><th>status</th><th>channel</th><th>paid_amount</th><th>paid_at</th><th>is_test</th></tr></thead>
+                    <tbody>
+                      <tr><td>O1001</td><td>U001</td><td>paid</td><td>app</td><td>89.00</td><td>2026-08-31 00:15:12</td><td>0</td></tr>
+                      <tr><td>O1002</td><td>U002</td><td>paid</td><td>web</td><td>129.00</td><td>2026-08-31 01:03:45</td><td>0</td></tr>
+                      <tr><td>O1003</td><td>U003</td><td>cancelled</td><td>app</td><td>59.00</td><td>NULL</td><td>0</td></tr>
+                      <tr><td>O1009</td><td>TEST1</td><td>paid</td><td>app</td><td>9999.00</td><td>2026-08-31 12:30:00</td><td>1</td></tr>
+                      <tr><td>O1014</td><td>U012</td><td>paid</td><td>app</td><td>209.00</td><td>2026-09-01 00:00:00</td><td>0</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="plain-section">
+                <h3>学完后要交出的证据</h3>
+                <ol class="objective-list">
+                  <li><strong>能完成 6 道本地教学基础查询</strong><span>`basic-sql-queries.sql` 中有 6 条只读取 orders 的 SELECT。</span></li>
+                  <li><strong>能把业务话翻译成 WHERE 条件</strong><span>`basic-query-log.md` 逐条写出 business_question、filter_condition 和 date_boundary。</span></li>
+                  <li><strong>能解释结果展示规则</strong><span>能说明 ORDER BY、AS 和 DISTINCT 只改变展示方式或去重观察，不等于指标。</span></li>
+                  <li><strong>能写出有限结论</strong><span>每条查询都有 observed_result、can_prove、cannot_prove 和 self_check_result。</span></li>
+                </ol>
+              </div>
+
+              <div class="chapter-checkpoint">
+                <div class="checkpoint-heading"><div><span>本章小闭环</span><h3>学习、练习、复述分别保存</h3></div><button type="button" class="reset-link">清空练习与复述</button></div>
+                <button type="button" class="learn-toggle">标记本章已学习</button>
+                <fieldset><legend>一行 orders 最稳妥的理解是什么？</legend><label><input type="radio">一条本地教学订单记录，可以用来练查询，不能直接代表真实生产订单</label><label><input type="radio">一条真实生产订单，可以直接计算收入</label><label><input type="radio">一个用户的完整行为画像</label></fieldset>
+                <label class="retell-field"><span>用两三句话说明：今天为什么先看 orders 表样本，再写 SQL？</span><small>量规：说清对象、字段、边界；不提前讲聚合或 JOIN</small><textarea rows="4"></textarea></label>
+              </div>
+            </section>
+
+            <section class="framework-chapter" data-framework-chapter="chapter-2" tabindex="-1">
+              <header class="chapter-head">
+                <div><span>SESSION 01 · CHAPTER 02</span><h2>模型一：从业务问题到 WHERE 条件</h2><p>数据库不能执行“帮我看看订单”。它需要你说明从哪张表开始、留下哪些行、输出哪些列。</p></div><strong>14 MIN</strong>
+              </header>
+              <div class="concept-ledger">
+                <article>
+                  <header><div><small>Query Question</small><h3>查询问题</h3></div><span>写 SQL 之前，先把业务话压成一个有限问题。</span></header>
+                  <p class="concept-definition">查询问题是把“看一下订单”改写成一条 SQL 能回答的问题，通常包含对象、范围、条件和想看的列。</p>
+                  <div class="concept-why"><p><b>为什么需要它</b>没有查询问题，SQL 会变成随便看表，结果也不知道是否回答了需求。</p><p><b>解决什么问题</b>回答“这条 SQL 到底要验证哪个有限问题”。</p></div>
+                  <dl><div><dt>输入</dt><dd>业务疑问和 orders 表字段。</dd></div><div><dt>输出</dt><dd>business_question 与 SQL 草稿。</dd></div><div><dt>责任人</dt><dd>学习者负责翻译问题。</dd></div><div><dt>不负责</dt><dd>不计算指标，不诊断数据质量。</dd></div></dl>
+                  <p class="pm-use"><b>产品经理怎样用：</b>当同事说“帮我看一下支付订单”，你先把它改成“查看本地 orders 表中 status 为 paid 的订单号、用户和支付时间”。这样数据库才知道从哪张表、哪些行、哪些列开始。</p>
+                  <div class="example-pair"><div><b>正确例子</b>业务问题：查看本地 orders 表中已支付订单的 order_id、user_id、paid_at。</div><div><b>越界例子</b>业务问题：算出真实业务 GMV 并判断活动效果。这个问题需要聚合、口径和生产数据，不属于 W3D3。</div></div>
+                </article>
+                <article>
+                  <header><div><small>WHERE Condition</small><h3>WHERE 条件</h3></div><span>FROM orders 之后的行级过滤门。</span></header>
+                  <p class="concept-definition">WHERE 条件用字段、比较符和值决定哪些订单行留下。它是选行，不是选列、排序或统计。</p>
+                  <div class="concept-why"><p><b>为什么需要它</b>产品问题通常只关心某类订单；条件不清楚会混入无关行。</p><p><b>解决什么问题</b>回答“哪些行应该进入这次结果，哪些行应该排除”。</p></div>
+                  <dl><div><dt>输入</dt><dd>orders 候选行、字段、比较符和值。</dd></div><div><dt>输出</dt><dd>通过条件后的订单行集合。</dd></div><div><dt>责任人</dt><dd>学习者写条件，SQLite 逐行判断。</dd></div><div><dt>不负责</dt><dd>不负责排序、别名、去重、聚合或连接。</dd></div></dl>
+                  <p class="pm-use"><b>产品经理怎样用：</b>产品经理说“只看已支付订单”，数据库听不懂这句中文；你必须翻译成 `WHERE status = "paid"`，让 SQLite 逐行判断 status 是否等于 paid。</p>
+                  <div class="example-pair"><div><b>正确例子</b>`WHERE status = "paid"` 会留下 O1001、O1002、O1004 等 paid 行。</div><div><b>越界例子</b>`SELECT status FROM orders` 只是展示 status 列，并没有筛掉 cancelled 或 pending 行。</div></div>
+                </article>
+                <article>
+                  <header><div><small>Comparison Operator</small><h3>比较符</h3></div><span>把中文判断变成数据库能执行的符号。</span></header>
+                  <p class="concept-definition">比较符把字段和值连接成判断，例如 `=`、`!=`、`>=`、`<`，让 SQLite 知道怎样逐行判断真假。产品经理要把“等于、当天、晚于、早于”说成数据库能执行的符号。</p>
+                  <div class="example-pair"><div><b>正确例子</b>`paid_at &gt;= "2026-08-31" AND paid_at &lt; "2026-09-01"` 会留下 8 月 31 日内的 paid_at 样本。</div><div><b>越界例子</b>`paid_at = "昨天"` 不是稳定边界，也不能解释具体起止时间。</div></div>
+                </article>
+                <article>
+                  <header><div><small>Text Value Filter</small><h3>文本值筛选</h3></div><span>status、channel 这类值需要引号。</span></header>
+                  <p class="concept-definition">文本值筛选是对 status、channel 这类文本字段使用引号包住的目标值进行行过滤。产品经理评审 SQL 时，要确认筛选的是字段里的文本值，不是一个不存在的字段名。</p>
+                  <div class="example-pair"><div><b>正确例子</b>`WHERE channel = "app"` 会留下 channel 为 app 的订单，包括 O1001、O1003、O1004。</div><div><b>越界例子</b>`WHERE channel = app`，SQLite 会把 app 当成字段名，查询会报错或无法得到预期结果。</div></div>
+                </article>
+              </div>
+              <div class="system-console">
+                <p class="simulation-label">同一个订单案例：从业务话到 WHERE</p>
+                <dl class="stage-ledger">
+                  <div><dt>业务话</dt><dd>我想看已支付订单。</dd></div>
+                  <div><dt>查询问题</dt><dd>查看本地 orders 表中 status 为 paid 的订单号、用户和支付时间。</dd></div>
+                  <div><dt>SQL 条件</dt><dd>WHERE status = "paid"</dd></div>
+                  <div><dt>预期留下</dt><dd>status 列等于 paid 的行；cancelled、pending、refunded 不应该留下。</dd></div>
+                  <div><dt>实际看到</dt><dd>前 5 行为 O1001、O1002、O1004、O1006、O1007。</dd></div>
+                  <div><dt>不能证明</dt><dd>不能证明真实生产支付订单数、收入或数据质量。</dd></div>
+                </dl>
+              </div>
+            </section>
+
+            <section class="framework-chapter" data-framework-chapter="chapter-3" tabindex="-1">
+              <header class="chapter-head">
+                <div><span>SESSION 01 · CHAPTER 03</span><h2>模型二：日期边界、排序、别名和 DISTINCT</h2><p>筛出行之后，还要决定时间窗口、展示顺序、列头和去重观察。这里仍然不是指标计算。</p></div><strong>14 MIN</strong>
+              </header>
+              <div class="concept-ledger">
+                <article><header><div><small>Date Range Boundary</small><h3>日期范围边界</h3></div><span>把“当天”写成明确起点和结束边界。</span></header><p class="concept-definition">带小时分钟的 paid_at 不能只写 `paid_at = "2026-08-31"`。更稳妥的写法是 `paid_at &gt;= "2026-08-31" AND paid_at &lt; "2026-09-01"`。</p><div class="example-pair"><div><b>正确例子</b>Q3 预期留下 O1001、O1002、O1004、O1005、O1006 等 8 月 31 日样本。</div><div><b>越界例子</b>没有结束边界就说这是完整当天，或把时区、延迟刷新也当成已验证。</div></div></article>
+                <article><header><div><small>Order Direction</small><h3>排序方向</h3></div><span>解释第一行为什么在前。</span></header><p class="concept-definition">ORDER BY 决定展示先后。要说“最近支付订单”，必须写 `ORDER BY paid_at DESC`；LIMIT 只截取样本，不负责排序。</p><div class="example-pair"><div><b>正确例子</b>Q4 实际前 5 行为 O1019、O1014、O1018、O1018、O1013，说明结果按 paid_at 倒序展示。</div><div><b>越界例子</b>没有 ORDER BY 却说第一行最新，或把前 5 行当作全量趋势。</div></div></article>
+                <article><header><div><small>Column Alias</small><h3>列别名</h3></div><span>让结果列头更适合交接。</span></header><p class="concept-definition">AS 只改变这次查询结果的列名，不修改 orders 表字段本身。它的价值是让产品记录和同事交接更可读。</p><div class="example-pair"><div><b>正确例子</b>Q5 输出 `paid_at AS paid_time`，结果列头叫 paid_time，但原表字段仍叫 paid_at。</div><div><b>越界例子</b>用 AS 后声称数据库字段已经改名。</div></div></article>
+                <article><header><div><small>DISTINCT Result</small><h3>DISTINCT 结果去重</h3></div><span>只观察不重复展示，不计算数量。</span></header><p class="concept-definition">`SELECT DISTINCT channel FROM orders` 只能展示本地样本里出现过哪些 channel，不能说明每个渠道有多少订单。</p><div class="example-pair"><div><b>正确例子</b>Q6 实际看到 app、miniapp、web 三类 channel 取值。</div><div><b>越界例子</b>说 DISTINCT 已经算出渠道订单数、渠道转化或渠道指标。</div></div></article>
+              </div>
+              <div class="system-console">
+                <p class="simulation-label">同一个订单案例：结果如何变得可读</p>
+                <dl class="stage-ledger">
+                  <div><dt>业务话</dt><dd>我想看 8 月 31 日最近支付订单，列名要能交接。</dd></div>
+                  <div><dt>SQL 组合</dt><dd>日期边界 + ORDER BY paid_at DESC + paid_at AS paid_time</dd></div>
+                  <div><dt>预期留下</dt><dd>paid_at 在 2026-08-31 起点到 2026-09-01 起点之前的行。</dd></div>
+                  <div><dt>实际看到</dt><dd>O1018、O1017、O1016 等行按 paid_time 倒序出现。</dd></div>
+                  <div><dt>能证明</dt><dd>这条基础查询的时间边界、排序和列头可复核。</dd></div>
+                  <div><dt>不能证明</dt><dd>不能证明收入正确、重复行来源、NULL 用户原因或渠道指标。</dd></div>
+                </dl>
+              </div>
+            </section>
+
+            <section class="framework-chapter" data-framework-chapter="chapter-4" tabindex="-1">
+              <header class="chapter-head"><div><span>SESSION 01 · CHAPTER 04</span><h2>第一次复述检查：一条查询从问题到边界</h2><p>不增加新术语。用一条完整查询把今天的学习链串起来。</p></div><strong>10 MIN</strong></header>
+              <div class="understanding-map"><span>business_question</span><i>→</i><span>FROM orders</span><i>→</i><span>WHERE/date</span><i>→</i><span>SELECT/AS</span><i>→</i><span>ORDER BY</span><i>→</i><span>observed_result</span><i>→</i><span>cannot_prove</span><p>先把问题落到 orders 数据源，再让 WHERE 选择行、日期边界限定窗口、SELECT 与 AS 形成可读列、ORDER BY 决定展示顺序，最后写出观察结果和不能证明事项。</p></div>
+              <div class="system-console">
+                <p class="simulation-label">教师示范 · 查看 2026-08-31 已支付订单样本</p>
+                <dl class="stage-ledger">
+                  <div><dt>业务问题</dt><dd>查看 2026-08-31 本地 orders 表中已支付订单的订单号、用户、状态和支付时间。</dd></div>
+                  <div><dt>预期留下</dt><dd>status = paid，且 paid_at 落在 2026-08-31 00:00:00 到 2026-09-01 00:00:00 之前。</dd></div>
+                  <div><dt>预期排除</dt><dd>cancelled、refunded、pending，以及 2026-09-01 及之后的 paid_at。</dd></div>
+                  <div><dt>先不处理</dt><dd>是否测试订单、是否重复、金额为空、用户为空，这些留给 W3D4 数据质量。</dd></div>
+                </dl>
+                <pre>SELECT order_id, user_id, status, paid_at AS paid_time
+FROM orders
+WHERE status = "paid"
+  AND paid_at &gt;= "2026-08-31"
+  AND paid_at &lt; "2026-09-01"
+ORDER BY paid_at DESC
+LIMIT 5;</pre>
+                <table>
+                  <thead><tr><th>order_id</th><th>user_id</th><th>status</th><th>paid_time</th></tr></thead>
+                  <tbody><tr><td>O1018</td><td>U015</td><td>paid</td><td>2026-08-31 23:30:30</td></tr><tr><td>O1017</td><td>U014</td><td>paid</td><td>2026-08-31 21:11:11</td></tr><tr><td>O1016</td><td>NULL</td><td>paid</td><td>2026-08-31 20:20:20</td></tr></tbody>
+                </table>
+                <dl class="stage-ledger">
+                  <div><dt>实际看到</dt><dd>前 3 行为 O1018、O1017、O1016，paid_time 都在 2026-08-31 且倒序排列。</dd></div>
+                  <div><dt>能证明</dt><dd>这条 SQL 的 status 条件、日期边界、别名和排序规则可复核。</dd></div>
+                  <div><dt>不能证明</dt><dd>不能证明真实生产订单、收入、数据质量、GROUP BY、JOIN 或指标正确。</dd></div>
+                  <div><dt>写入记录</dt><dd>把 business_question、sql_text、observed_result、can_prove、cannot_prove 填入 basic-query-log.md。</dd></div>
+                </dl>
+              </div>
+            </section>
+
+            <section class="framework-chapter" data-framework-chapter="chapter-5" tabindex="-1">
+              <header class="chapter-head"><div><span>SESSION 02 · CHAPTER 05</span><h2>操作模型：6 道基础查询练习台</h2><p>先做正向任务，再看常见错误。每题都要留下 SQL 和一句结果边界。</p></div><strong>18 MIN</strong></header>
+              <figure class="relationship-map">
+                <figcaption><strong>6 道基础查询从浅到深</strong><span>每道题只训练一个基础动作；它们共同生成 basic-sql-queries.sql 与 basic-query-log.md。</span></figcaption>
+                <ol>
+                  <li><strong>Q1 已支付订单</strong><p>把“只看已支付”翻译成 WHERE 文本条件。</p><small>status = "paid"</small></li>
+                  <li><strong>Q2 app 渠道订单</strong><p>把“app 渠道”翻译成带引号的文本值。</p><small>channel = "app"</small></li>
+                  <li><strong>Q3 2026-08-31 当天订单</strong><p>把“当天”翻译成起点和结束边界。</p><small>paid_at &gt;= 起点 AND paid_at &lt; 下一天</small></li>
+                  <li><strong>Q4 最近支付订单</strong><p>用 ORDER BY DESC 解释第一行为什么在前。</p><small>ORDER BY paid_at DESC</small></li>
+                  <li><strong>Q5 支付时间列名可读</strong><p>用 AS 让结果列头适合交接。</p><small>paid_at AS paid_time</small></li>
+                  <li><strong>Q6 渠道取值观察</strong><p>用 DISTINCT 观察不同 channel 展示值。</p><small>SELECT DISTINCT channel</small></li>
+                </ol>
+              </figure>
+              <div class="lab-panel">
+                <div class="lab-title"><div><span>教学模拟</span><h3>逐题记录，而不是先看答案</h3><p>每完成一题，就补一行 query log：问题、SQL、预期、实际结果、能证明和不能证明什么。</p></div><small>answers.sql 只在自检后对照，不在首次操作前暴露。</small></div>
+                <ol class="lab-steps">
+                  <li>
+                    <label><input type="checkbox"><span><b>Q1 查已支付订单</b>把“只看已支付订单”翻译成 `WHERE status = "paid"`。</span></label>
+                    <dl class="stage-ledger">
+                      <div><dt>业务问题</dt><dd>查看本地 orders 表中已支付订单的 order_id、user_id、status、paid_at。</dd></div>
+                      <div><dt>SQL</dt><dd>SELECT order_id, user_id, status, paid_at FROM orders WHERE status = "paid" LIMIT 5;</dd></div>
+                      <div><dt>预期留下</dt><dd>status 等于 paid 的行；cancelled、pending、refunded 不应留下。</dd></div>
+                      <div><dt>实际看到</dt><dd>O1001、O1002、O1004、O1006、O1007。</dd></div>
+                      <div><dt>能证明</dt><dd>WHERE 文本条件能筛出 paid 行样本。</dd></div>
+                      <div><dt>不能证明</dt><dd>不能证明真实生产支付订单数、收入或状态字段没有脏值。</dd></div>
+                    </dl>
+                  </li>
+                  <li>
+                    <label><input type="checkbox"><span><b>Q2 查 app 渠道订单</b>把“app 渠道”翻译成 `WHERE channel = "app"`，注意文本值引号。</span></label>
+                    <dl class="stage-ledger">
+                      <div><dt>业务问题</dt><dd>查看本地 orders 表中 channel 为 app 的订单样本。</dd></div>
+                      <div><dt>SQL</dt><dd>SELECT order_id, channel, status FROM orders WHERE channel = "app" LIMIT 5;</dd></div>
+                      <div><dt>预期留下</dt><dd>channel 等于 app 的行；web、miniapp 不应留下。</dd></div>
+                      <div><dt>实际看到</dt><dd>O1001、O1003、O1004、O1007、O1009；其中状态可能不同。</dd></div>
+                      <div><dt>能证明</dt><dd>channel 文本值筛选可复核，且 channel 条件不等于 paid 条件。</dd></div>
+                      <div><dt>不能证明</dt><dd>不能证明 app 渠道订单数、渠道转化或测试订单是否应排除。</dd></div>
+                    </dl>
+                  </li>
+                  <li>
+                    <label><input type="checkbox"><span><b>Q3 查 2026-08-31 当天订单</b>把“当天”写成起点和不包含的结束边界。</span></label>
+                    <dl class="stage-ledger">
+                      <div><dt>业务问题</dt><dd>查看 paid_at 落在 2026-08-31 当天的订单样本。</dd></div>
+                      <div><dt>SQL</dt><dd>SELECT order_id, user_id, paid_at FROM orders WHERE paid_at &gt;= "2026-08-31" AND paid_at &lt; "2026-09-01" LIMIT 5;</dd></div>
+                      <div><dt>预期留下</dt><dd>paid_at 从 2026-08-31 00:00:00 开始，到 2026-09-01 00:00:00 之前。</dd></div>
+                      <div><dt>实际看到</dt><dd>O1001、O1002、O1004、O1005、O1006。</dd></div>
+                      <div><dt>能证明</dt><dd>日期边界有明确起点和结束，不靠模糊“当天”。</dd></div>
+                      <div><dt>不能证明</dt><dd>不能证明时区、延迟刷新、NULL paid_at 或数据质量问题。</dd></div>
+                    </dl>
+                  </li>
+                  <li>
+                    <label><input type="checkbox"><span><b>Q4 按支付时间倒序看最近订单</b>用 ORDER BY 解释“最近”这个展示判断。</span></label>
+                    <dl class="stage-ledger">
+                      <div><dt>业务问题</dt><dd>查看本地 orders 表中按 paid_at 倒序展示的最近订单样本。</dd></div>
+                      <div><dt>SQL</dt><dd>SELECT order_id, user_id, paid_at FROM orders WHERE status = "paid" ORDER BY paid_at DESC LIMIT 5;</dd></div>
+                      <div><dt>预期留下</dt><dd>status 为 paid 的行，并按 paid_at 从晚到早排列。</dd></div>
+                      <div><dt>实际看到</dt><dd>O1019、O1014、O1018、O1018、O1013。</dd></div>
+                      <div><dt>能证明</dt><dd>ORDER BY paid_at DESC 决定展示顺序；LIMIT 只截取前 5 行。</dd></div>
+                      <div><dt>不能证明</dt><dd>不能证明全量趋势，也不能解释为什么 O1018 出现两次。</dd></div>
+                    </dl>
+                  </li>
+                  <li>
+                    <label><input type="checkbox"><span><b>Q5 给 paid_at 起业务别名 paid_time</b>让结果列头更适合交接。</span></label>
+                    <dl class="stage-ledger">
+                      <div><dt>业务问题</dt><dd>查看最近支付订单，并把 paid_at 在结果里展示成 paid_time。</dd></div>
+                      <div><dt>SQL</dt><dd>SELECT order_id, paid_at AS paid_time FROM orders WHERE status = "paid" ORDER BY paid_at DESC LIMIT 3;</dd></div>
+                      <div><dt>预期留下</dt><dd>结果列头出现 paid_time；原表字段仍是 paid_at。</dd></div>
+                      <div><dt>实际看到</dt><dd>O1019、O1014、O1018，列名为 paid_time。</dd></div>
+                      <div><dt>能证明</dt><dd>AS 能改变本次查询结果列头，帮助业务阅读。</dd></div>
+                      <div><dt>不能证明</dt><dd>不能证明数据库字段已经改名，也不修改原表结构。</dd></div>
+                    </dl>
+                  </li>
+                  <li>
+                    <label><input type="checkbox"><span><b>Q6 用 DISTINCT channel 观察渠道取值</b>只观察不重复展示，不计算指标。</span></label>
+                    <dl class="stage-ledger">
+                      <div><dt>业务问题</dt><dd>查看本地 orders 表中出现过哪些 channel 取值。</dd></div>
+                      <div><dt>SQL</dt><dd>SELECT DISTINCT channel FROM orders ORDER BY channel;</dd></div>
+                      <div><dt>预期留下</dt><dd>相同 channel 只展示一次。</dd></div>
+                      <div><dt>实际看到</dt><dd>app、miniapp、web。</dd></div>
+                      <div><dt>能证明</dt><dd>DISTINCT 能展示本地样本里不重复的 channel 取值。</dd></div>
+                      <div><dt>不能证明</dt><dd>不能证明每个渠道订单数、渠道用户数、渠道转化或指标口径。</dd></div>
+                    </dl>
+                  </li>
+                </ol>
+              </div>
+            </section>
+
+            <section class="framework-chapter" data-framework-chapter="chapter-6" tabindex="-1">
+              <header class="chapter-head"><div><span>SESSION 02 · CHAPTER 06</span><h2>责任与证据边界：先修常见误判</h2><p>纠错放在学会正向查询之后。每个错误都要定位到字段或 SQL 动作。</p></div><strong>14 MIN</strong></header>
+              <div class="boundary-table">
+                <h3>看到什么，最多判断到哪里</h3>
+                <dl>
+                  <div><dt>问题太模糊</dt><dd>“查订单”不能执行。先补 query_id 和 business_question。</dd></div>
+                  <div><dt>日期只写等于</dt><dd>paid_at 带小时分钟，应用起点和不包含的结束边界。</dd></div>
+                  <div><dt>文本值没引号</dt><dd>`channel = app` 会被误读；文本值写成 `"app"`。</dd></div>
+                  <div><dt>没排序说最新</dt><dd>没有 `ORDER BY paid_at DESC`，不能说第一行就是最新。</dd></div>
+                  <div><dt>别名无意义</dt><dd>`paid_at AS x` 不利于交接；改成 `paid_time`。</dd></div>
+                  <div><dt>DISTINCT 越界</dt><dd>`DISTINCT channel` 不等于渠道订单数或指标口径。</dd></div>
+                </dl>
+              </div>
+              <div class="independent-panel">
+                <h3>独立变式：修正一组基础查询差稿</h3>
+                <p>同学写了 `SELECT DISTINCT user_id FROM orders LIMIT 5;`，然后说“用户数是 5，渠道指标完成”。请只用 W3D3 概念修正：补业务问题、改 SQL、写出能证明和不能证明什么。</p>
+                <label><span>检查计划</span><textarea rows="5"></textarea></label>
+                <label><span>四句有限结论</span><textarea rows="4"></textarea></label>
+              </div>
+            </section>
+
+            <section class="framework-chapter" data-framework-chapter="chapter-7" tabindex="-1">
+              <header class="chapter-head"><div><span>SESSION 02 · CHAPTER 07</span><h2>实验、basic-query-log.md 与最终复述</h2><p>最后把 6 道题沉淀成两个文件：SQL 文件保存可执行查询，记录文件保存问题、观察和边界。</p></div><strong>20 MIN</strong></header>
+              <div class="deliverable-panel">
+                <h3>今日成果：6 道基础查询</h3>
+                <p>提交 `basic-sql-queries.sql` 与 `basic-query-log.md`。不要一开始硬填 15 个字段；先按 Q1–Q6 每做完一题生成一条记录，最后再合并成完整成果。</p>
+                <div class="field-ledger">
+                  <div><b>第 1 步：先写题目身份</b><p>query_id、business_question、base_table。</p><small>例：Q1_paid_orders；查看本地 orders 表中已支付订单。</small></div>
+                  <div><b>第 2 步：再写查询动作</b><p>selected_columns、filter_condition、date_boundary、sort_rule、alias_used、distinct_rule。</p><small>不涉及的字段写“本题不使用”，不要空着。</small></div>
+                  <div><b>第 3 步：粘贴 SQL</b><p>sql_text 只放本题可执行 SELECT。</p><small>本日只允许 FROM orders，不写 GROUP BY 或 JOIN。</small></div>
+                  <div><b>第 4 步：最后写证据边界</b><p>observed_result、can_prove、cannot_prove、self_check_result、next_sql_task。</p><small>每题都要承认不能证明生产、质量、聚合或指标。</small></div>
+                </div>
+                <details open>
+                  <summary>Q3 做完后，自动沉淀成这样一条记录</summary>
+                  <pre>query_id: Q3_orders_on_20260831
+business_question: 查看 paid_at 落在 2026-08-31 当天的本地 orders 订单样本
+base_table: orders
+selected_columns: order_id, user_id, paid_at
+filter_condition: paid_at &gt;= "2026-08-31" AND paid_at &lt; "2026-09-01"
+date_boundary: 起点包含 2026-08-31；结束不包含 2026-09-01
+sort_rule: 本题未指定排序，不能声称最新或最早
+alias_used: 本题不使用别名
+distinct_rule: 本题不使用 DISTINCT
+sql_text: SELECT order_id, user_id, paid_at FROM orders WHERE paid_at &gt;= "2026-08-31" AND paid_at &lt; "2026-09-01" LIMIT 5;
+observed_result: 看到 O1001、O1002、O1004、O1005、O1006，paid_at 均落在边界内
+can_prove: 能证明这条基础查询的日期起点和结束边界可复核
+cannot_prove: 不能证明真实生产收入、时区正确、NULL paid_at、重复行、聚合、GROUP BY、JOIN 或指标正确
+self_check_result: self_check.sql 对照通过；未提前打开 answers.sql
+next_sql_task: W3D4 数据质量检查</pre>
+                </details>
+                <details>
+                  <summary>6 道题最终分别生成哪些记录</summary>
+                  <ol>
+                    <li><b>Q1_paid_orders：</b>记录 `WHERE status = "paid"`，实际看到 O1001、O1002、O1004、O1006、O1007；不能证明真实支付订单数。</li>
+                    <li><b>Q2_app_channel_orders：</b>记录 `WHERE channel = "app"`，实际看到 O1001、O1003、O1004、O1007、O1009；不能证明渠道指标。</li>
+                    <li><b>Q3_orders_on_20260831：</b>记录日期起点和结束边界；不能证明时区或 NULL paid_at 问题。</li>
+                    <li><b>Q4_recent_paid_orders：</b>记录 `ORDER BY paid_at DESC`，实际看到 O1019、O1014、O1018、O1018、O1013；不能解释重复来源。</li>
+                    <li><b>Q5_paid_time_alias：</b>记录 `paid_at AS paid_time`，能证明结果列头可读；不能证明表结构被修改。</li>
+                    <li><b>Q6_distinct_channels：</b>记录 `SELECT DISTINCT channel`，实际看到 app、miniapp、web；不能证明渠道订单数。</li>
+                  </ol>
+                </details>
+              </div>
+              <div class="memory-panel">
+                <h3>最终复述与复习排程</h3>
+                <label><span>闭卷解释</span><small>不看正文，写一条从 orders 查某天 paid 订单的 SQL，并说明 WHERE、日期边界、ORDER BY、AS 和 cannot_prove。</small><textarea rows="6"></textarea></label>
+              </div>
+              <div class="course-completion"><h3>完成核验</h3><p>完成页面不等于掌握；本课只记录已学习、练习通过、待复核复述、实操证据与待审核成果。W3D3 完成后下一步只进入 W3D4 数据质量检查。</p><button type="button" disabled>记录本课首学完成</button></div>
+            </section>
+          </div>
+        </main>
+
+        <aside class="w1-route" aria-label="W3D3 七章学习路线">
+          <div class="w1-route-head"><strong>七章学习路线</strong><span>0%</span></div>
+          <div class="w1-route-group"><strong><span>时段 1</span><span>4 章</span></strong><div class="w1-route-list">
+            <button type="button" class="w1-route-item" aria-current="location"><span class="w1-route-title"><span>01</span><span>建立任务：先看见今天要查的对象</span></span><span class="w1-route-states"><span class="w1-route-state">学习</span><span class="w1-route-state">练习</span><span class="w1-route-state">复述</span></span></button>
+            <button type="button" class="w1-route-item"><span class="w1-route-title"><span>02</span><span>模型一：从业务问题到 WHERE 条件</span></span><span class="w1-route-states"><span class="w1-route-state">学习</span><span class="w1-route-state">练习</span><span class="w1-route-state">复述</span></span></button>
+            <button type="button" class="w1-route-item"><span class="w1-route-title"><span>03</span><span>模型二：日期边界、排序、别名和 DISTINCT</span></span><span class="w1-route-states"><span class="w1-route-state">学习</span><span class="w1-route-state">练习</span><span class="w1-route-state">复述</span></span></button>
+            <button type="button" class="w1-route-item"><span class="w1-route-title"><span>04</span><span>第一次复述检查：一条查询从问题到边界</span></span><span class="w1-route-states"><span class="w1-route-state">学习</span><span class="w1-route-state">练习</span><span class="w1-route-state">复述</span></span></button>
+          </div></div>
+          <div class="w1-route-group"><strong><span>时段 2</span><span>3 章</span></strong><div class="w1-route-list">
+            <button type="button" class="w1-route-item"><span class="w1-route-title"><span>05</span><span>操作模型：6 道基础查询练习台</span></span><span class="w1-route-states"><span class="w1-route-state">学习</span><span class="w1-route-state">练习</span><span class="w1-route-state">复述</span></span></button>
+            <button type="button" class="w1-route-item"><span class="w1-route-title"><span>06</span><span>责任与证据边界：先修常见误判</span></span><span class="w1-route-states"><span class="w1-route-state">学习</span><span class="w1-route-state">练习</span><span class="w1-route-state">复述</span></span></button>
+            <button type="button" class="w1-route-item"><span class="w1-route-title"><span>07</span><span>实验、basic-query-log.md 与最终复述</span></span><span class="w1-route-states"><span class="w1-route-state">学习</span><span class="w1-route-state">练习</span><span class="w1-route-state">复述</span></span></button>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+  </article>
+</body>
+</html>

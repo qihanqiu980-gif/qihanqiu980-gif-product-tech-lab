@@ -1,0 +1,40 @@
+@baseUrl = http://127.0.0.1:9999
+@token = test-token-placeholder
+
+### 创建：正常
+POST {{baseUrl}}/api/v1/member-tags
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Idempotency-Key: tag-create-demo-001
+
+{
+  "name": "高意向用户",
+  "color": "orange",
+  "description": null
+}
+
+### 边界：空名称，应返回 400 INVALID_ARGUMENT
+POST {{baseUrl}}/api/v1/member-tags
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Idempotency-Key: tag-create-demo-002
+
+{
+  "name": "   ",
+  "color": "orange"
+}
+
+### 冲突：重复名称，应返回 409 NAME_CONFLICT
+POST {{baseUrl}}/api/v1/member-tags
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Idempotency-Key: tag-create-demo-003
+
+{
+  "name": "高意向用户",
+  "color": "blue"
+}
+
+### 查询与分页
+GET {{baseUrl}}/api/v1/member-tags?page_size=20&cursor=next-demo
+Authorization: Bearer {{token}}

@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>W3D3 高保真原型 - 用户与订单基础查询</title>
+  <style>
+    :root {
+      --shell: #05283a;
+      --route: #062f43;
+      --route-line: #214b5f;
+      --paper: #eef1f2;
+      --paper-deep: #dce4e7;
+      --surface: #fbfcfc;
+      --white: #ffffff;
+      --ink: #132d3c;
+      --muted: #4b626d;
+      --faint: #6f8791;
+      --orange: #e2672d;
+      --orange-deep: #a94419;
+      --green: #23735b;
+      --red: #ad3c35;
+      --line: #b9c6cc;
+      --line-strong: #8498a2;
+      --mono: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+      --font: "Noto Sans SC Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font);
+      background:
+        linear-gradient(90deg, rgba(20,45,61,.06) 1px, transparent 1px) 0 0 / 28px 28px,
+        var(--paper);
+    }
+
+    .prototype-note {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding: 9px 18px;
+      background: #fff5ee;
+      border-bottom: 1px solid #efc8b3;
+      color: #7a3518;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 224px minmax(0, 1fr);
+      min-height: 100vh;
+      background: var(--shell);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 22px 16px;
+      color: white;
+      border-right: 1px solid rgba(255,255,255,.08);
+      background: #052435;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 11px 10px 24px;
+      border-bottom: 1px solid rgba(255,255,255,.11);
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 9px;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand strong { display: block; font-size: 16px; }
+    .brand small { display: block; color: #a9c0c9; font-size: 12px; margin-top: 2px; }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .nav button {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 9px;
+      color: #bfd1d8;
+      background: transparent;
+      font: 700 15px/1 var(--font);
+      text-align: left;
+    }
+
+    .nav .current {
+      color: #fff;
+      background: #123b54;
+      box-shadow: inset 3px 0 0 var(--orange);
+    }
+
+    .nav i {
+      width: 18px;
+      height: 18px;
+      border: 1.7px solid currentColor;
+      border-radius: 5px;
+    }
+
+    .sidebar-foot {
+      margin-top: auto;
+      padding: 14px 10px;
+      border-top: 1px solid rgba(255,255,255,.11);
+      color: #a9c0c9;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .window {
+      min-width: 0;
+      background: var(--paper);
+    }
+
+    .appbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 58px;
+      padding: 0 34px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .appbar strong { font-size: 16px; }
+    .appbar span {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 244px;
+      gap: 28px;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 34px 34px 58px;
+    }
+
+    .main {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 14px 36px rgba(23, 52, 69, .11);
+      overflow: hidden;
+    }
+
+    .cover {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 270px;
+      gap: 24px;
+      padding: 34px 38px 28px;
+      background: linear-gradient(180deg, #fff, #f7faf9);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--orange-deep);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: 42px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.78;
+    }
+
+    .summary {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .summary strong {
+      display: block;
+      font-size: 25px;
+      line-height: 1.2;
+    }
+
+    .summary span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .progress {
+      height: 8px;
+      margin: 18px 0;
+      border-radius: 999px;
+      background: #dce4e7;
+      overflow: hidden;
+    }
+
+    .progress i {
+      display: block;
+      width: 12%;
+      height: 100%;
+      background: var(--orange);
+    }
+
+    .session-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 20px 38px;
+      background: #f3f6f6;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .session-strip div {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .session-strip strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .session-strip span {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .protocol {
+      margin: 26px 38px 0;
+      padding: 18px 20px;
+      border-radius: 11px;
+      color: #eaf3f5;
+      background: #09293d;
+    }
+
+    .protocol strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #fff;
+      font-size: 17px;
+    }
+
+    .protocol p {
+      margin: 0;
+      color: #c8d9df;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .manuscript {
+      padding: 0 38px 46px;
+    }
+
+    .chapter {
+      padding-top: 48px;
+      border-top: 1px solid #dde5e8;
+      margin-top: 48px;
+    }
+
+    .chapter:first-child {
+      border-top: 0;
+      margin-top: 0;
+    }
+
+    .chapter-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .chapter-head small {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--orange-deep);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .chapter-head p {
+      max-width: 760px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.78;
+    }
+
+    .minutes {
+      flex: 0 0 auto;
+      align-self: flex-start;
+      padding: 7px 10px;
+      border-radius: 7px;
+      color: #fff;
+      background: var(--orange);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .story {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .story-card, .table-card, .concept, .query-card, .lab-panel, .deliverable, .boundary {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .story-card {
+      padding: 22px;
+    }
+
+    .story-card h3, .table-card h3, .lab-panel h3, .deliverable h3, .boundary h3 {
+      margin: 0 0 12px;
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .story-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .story-card blockquote {
+      margin: 16px 0 0;
+      padding: 15px 17px;
+      border-left: 4px solid var(--orange);
+      background: #fff7f1;
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .table-card {
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      color: #fff;
+      background: #123b54;
+      font-family: var(--mono);
+      font-weight: 700;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #d7e0e4;
+      white-space: nowrap;
+    }
+
+    td {
+      font-family: var(--mono);
+      color: #213d4b;
+    }
+
+    tr.flag td {
+      background: #fff3ed;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .concept {
+      padding: 19px;
+    }
+
+    .concept small {
+      display: block;
+      color: var(--faint);
+      font-family: var(--mono);
+      margin-bottom: 7px;
+    }
+
+    .concept h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .concept p {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .example {
+      display: grid;
+      gap: 8px;
+      padding: 13px;
+      border-radius: 9px;
+      background: #f4f7f8;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .example b {
+      font-family: var(--font);
+      color: var(--ink);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .flow span {
+      min-height: 78px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .flow b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--orange-deep);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .demo {
+      display: grid;
+      gap: 14px;
+    }
+
+    .query-card {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .query-meta {
+      border-right: 1px solid var(--line);
+      padding-right: 18px;
+    }
+
+    .query-meta small {
+      display: block;
+      color: var(--orange-deep);
+      font-family: var(--mono);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .query-meta h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .query-meta p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    pre {
+      margin: 0;
+      padding: 15px 16px;
+      border-radius: 10px;
+      color: #eaf3f5;
+      background: #09293d;
+      font: 13px/1.65 var(--mono);
+      overflow: auto;
+    }
+
+    .result-table {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .result-table th { background: #e8edef; color: var(--ink); }
+    .result-table td { background: #fff; }
+
+    .lab-panel {
+      padding: 20px;
+      background: #f7faf9;
+    }
+
+    .six-queries {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .six-queries article {
+      padding: 16px;
+      border: 1px solid #c8d4da;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .six-queries h4 {
+      margin: 0 0 9px;
+      font-size: 17px;
+    }
+
+    .six-queries p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .six-queries code {
+      display: block;
+      padding: 10px;
+      border-radius: 8px;
+      color: #123b54;
+      background: #eef3f5;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .boundary {
+      padding: 20px;
+    }
+
+    .boundary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .boundary-grid div {
+      padding: 14px;
+      border: 1px solid #d2dde1;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .boundary-grid b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--red);
+    }
+
+    .boundary-grid p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .deliverable {
+      padding: 20px;
+      background: #fff;
+    }
+
+    .log-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .log-grid div {
+      padding: 13px;
+      border: 1px solid #d5e0e4;
+      border-radius: 9px;
+      background: #f8faf9;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .log-grid b {
+      display: block;
+      margin-bottom: 5px;
+      font-family: var(--mono);
+      color: #123b54;
+    }
+
+    .checkpoint {
+      margin-top: 20px;
+      padding: 18px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 11px;
+      background: #fbfcfc;
+    }
+
+    .checkpoint h3 {
+      margin: 0 0 10px;
+      font-size: 19px;
+    }
+
+    .checkpoint p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .route {
+      position: sticky;
+      top: 34px;
+      align-self: start;
+      padding: 18px;
+      border-radius: 14px;
+      color: #fff;
+      background: var(--route);
+      box-shadow: 0 14px 36px rgba(23, 52, 69, .12);
+    }
+
+    .route-head {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--route-line);
+    }
+
+    .route-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .route-item {
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 10px;
+      background: rgba(255,255,255,.04);
+    }
+
+    .route-item.current {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: inset 3px 0 0 var(--orange);
+    }
+
+    .route-item small {
+      display: block;
+      margin-bottom: 5px;
+      color: inherit;
+      opacity: .75;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .route-item b {
+      display: block;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .states {
+      display: flex;
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .states span {
+      padding: 3px 6px;
+      border-radius: 5px;
+      color: #c9d9de;
+      background: rgba(255,255,255,.08);
+      font-size: 11px;
+    }
+
+    .current .states span:first-child {
+      color: #fff;
+      background: var(--green);
+    }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .shell { grid-template-columns: 1fr; padding: 20px; }
+      .route { position: static; order: -1; }
+      .cover { grid-template-columns: 1fr; }
+      .story, .query-card, .concept-grid, .six-queries, .boundary-grid, .log-grid { grid-template-columns: 1fr; }
+      .query-meta { border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 14px; }
+    }
+
+    @media (max-width: 520px) {
+      .appbar { padding: 0 18px; }
+      .shell { padding: 12px; }
+      .cover, .session-strip, .manuscript { padding-left: 18px; padding-right: 18px; }
+      .session-strip { grid-template-columns: 1fr; }
+      h1 { font-size: 34px; }
+      h2 { font-size: 27px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="prototype-note">评审原型：只用于确认 W3D3 内容方向和页面组织，不接入正式课程路由、证据账本或构建流程。</div>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">PL</div><div><strong>产品技术</strong><small>实验室</small></div></div>
+      <nav class="nav" aria-label="主要导航">
+        <button><i></i>今日</button>
+        <button class="current"><i></i>课程</button>
+        <button><i></i>复盘</button>
+        <button><i></i>进度</button>
+        <button><i></i>概念</button>
+      </nav>
+      <div class="sidebar-foot">能力权重<br>数据 40% · 沟通 30% · 评审 30%</div>
+    </aside>
+
+    <div class="window">
+      <header class="appbar"><strong>产品技术实验室</strong><span>COURSE / W3D3 PROTOTYPE</span></header>
+      <div class="shell">
+        <main class="main">
+          <section class="cover">
+            <div>
+              <p class="eyebrow">WEEK 3 · DAY 3 · 双时段课程</p>
+              <h1>用户与订单基础查询</h1>
+              <p class="subtitle">今天只学一件事：把“我想看某类订单”翻译成一条能在本地 orders 表跑通的单表 SQL，并用结果说明它能证明什么、不能证明什么。</p>
+            </div>
+            <div class="summary">
+              <strong>92 分钟</strong>
+              <span>建议分两次完成；30 分钟路径先完成 Q1-Q3，45 分钟路径完成 Q1-Q6。</span>
+              <div class="progress"><i></i></div>
+              <span>状态：原型评审中 · 掌握未判定</span>
+            </div>
+          </section>
+
+          <section class="session-strip">
+            <div><strong>第一时段 · 看懂对象与前三条查询</strong><span>orders 表样本、查询问题、WHERE、比较符、文本值和日期边界。</span></div>
+            <div><strong>第二时段 · 完成 6 道查询记录</strong><span>ORDER BY、AS、DISTINCT、纠错、basic-sql-queries.sql 与 basic-query-log.md。</span></div>
+          </section>
+
+          <div class="protocol">
+            <strong>本课边界</strong>
+            <p>只读取本地教学模拟 orders 表；不连接真实数据库，不打开生产数据，不提前复制 answers.sql。今天不讲聚合、GROUP BY、JOIN、指标和数据质量诊断。</p>
+          </div>
+
+          <div class="manuscript">
+            <section class="chapter">
+              <header class="chapter-head">
+                <div><small>SESSION 01 · CHAPTER 01</small><h2>建立任务：先看见今天要查的对象</h2><p>产品问题不能直接被数据库理解。今天先把“看订单”变成一个有表、有字段、有条件、有结果边界的查询动作。</p></div>
+                <span class="minutes">8 MIN</span>
+              </header>
+              <div class="story">
+                <div class="story-card">
+                  <h3>工作场景</h3>
+                  <p>数据同事给你一个本地教学表 <b>orders</b>，让你先练习 6 个基础问题：已支付订单、渠道订单、某天订单、最近订单、可读列名和渠道取值。</p>
+                  <blockquote>今天学会的是：我能把一个具体订单问题写成 SQL，看懂返回的行，并知道这条结果不能替我证明什么。</blockquote>
+                </div>
+                <div class="table-card">
+                  <h3>orders 表样本</h3>
+                  <table>
+                    <thead><tr><th>order_id</th><th>user_id</th><th>status</th><th>channel</th><th>paid_at</th></tr></thead>
+                    <tbody>
+                      <tr><td>O1001</td><td>U001</td><td>paid</td><td>app</td><td>2026-08-31 00:15</td></tr>
+                      <tr><td>O1002</td><td>U002</td><td>paid</td><td>web</td><td>2026-08-31 01:03</td></tr>
+                      <tr><td>O1003</td><td>U003</td><td>cancelled</td><td>app</td><td>NULL</td></tr>
+                      <tr class="flag"><td>O1009</td><td>TEST1</td><td>paid</td><td>app</td><td>2026-08-31 12:30</td></tr>
+                      <tr><td>O1014</td><td>U012</td><td>paid</td><td>app</td><td>2026-09-01 00:00</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="checkpoint"><h3>本章小闭环</h3><p>闭卷说出：一行 orders 代表一条教学订单记录；今天先做单表基础查询，不判断真实生产收入或数据质量。</p></div>
+            </section>
+
+            <section class="chapter">
+              <header class="chapter-head">
+                <div><small>SESSION 01 · CHAPTER 02</small><h2>模型一：从业务问题到 WHERE 条件</h2><p>数据库不能执行“帮我看看订单”。它需要你说明从哪张表开始、留下哪些行、输出哪些列。</p></div>
+                <span class="minutes">14 MIN</span>
+              </header>
+              <div class="concept-grid">
+                <article class="concept">
+                  <small>Query Question</small>
+                  <h3>查询问题</h3>
+                  <p>把模糊业务话压成一条 SQL 能回答的有限问题。先说对象、范围、条件和想看的列。</p>
+                  <div class="example"><b>从业务话到查询问题</b>“看一下订单” → “查看本地 orders 表中 status 为 paid 的订单号、用户和支付时间”。</div>
+                </article>
+                <article class="concept">
+                  <small>WHERE Condition</small>
+                  <h3>WHERE 条件</h3>
+                  <p>WHERE 是选行门。它不改变列名、不排序、不计数，只决定哪些订单行留下。</p>
+                  <div class="example"><b>可执行条件</b>WHERE status = "paid"<br><b>不能替代条件</b>SELECT status FROM orders</div>
+                </article>
+                <article class="concept">
+                  <small>Comparison Operator</small>
+                  <h3>比较符</h3>
+                  <p>比较符把字段和值连接成判断。等于、早于、晚于，都要变成数据库能执行的符号。</p>
+                  <div class="example"><b>日期窗口</b>paid_at &gt;= "2026-08-31" AND paid_at &lt; "2026-09-01"</div>
+                </article>
+                <article class="concept">
+                  <small>Text Value Filter</small>
+                  <h3>文本值筛选</h3>
+                  <p>status、channel 这类文本值需要引号。少写引号，数据库会把 app 当成字段名而不是值。</p>
+                  <div class="example"><b>正确</b>WHERE channel = "app"<br><b>错误</b>WHERE channel = app</div>
+                </article>
+              </div>
+            </section>
+
+            <section class="chapter">
+              <header class="chapter-head">
+                <div><small>SESSION 01 · CHAPTER 03</small><h2>模型二：结果如何变得可读</h2><p>筛出行之后，还要决定展示顺序、列名和去重观察。这里仍然只是在形成结果，不是在计算指标。</p></div>
+                <span class="minutes">14 MIN</span>
+              </header>
+              <div class="flow">
+                <span><b>01 表</b>FROM orders</span>
+                <span><b>02 选行</b>WHERE status = "paid"</span>
+                <span><b>03 时间</b>paid_at 起止边界</span>
+                <span><b>04 输出</b>SELECT order_id, user_id</span>
+                <span><b>05 展示</b>ORDER BY paid_at DESC</span>
+                <span><b>06 边界</b>cannot_prove</span>
+              </div>
+              <div class="concept-grid">
+                <article class="concept"><small>Order Direction</small><h3>排序方向</h3><p>“最近”必须有 ORDER BY paid_at DESC。没有排序时，第一行只是当前展示第一行。</p></article>
+                <article class="concept"><small>Column Alias</small><h3>列别名</h3><p>AS 只改结果列头，不改数据库字段。它让交接记录更容易读懂。</p></article>
+                <article class="concept"><small>DISTINCT Result</small><h3>DISTINCT 去重观察</h3><p>DISTINCT channel 只能展示出现过哪些渠道，不能说明每个渠道有多少订单。</p></article>
+                <article class="concept"><small>Evidence Boundary</small><h3>证据边界</h3><p>每条查询最后都要写 can_prove 和 cannot_prove，防止把样本结果说成业务结论。</p></article>
+              </div>
+            </section>
+
+            <section class="chapter">
+              <header class="chapter-head">
+                <div><small>SESSION 01 · CHAPTER 04</small><h2>第一次复述：一条查询从问题到边界</h2><p>不增加新术语。用一条完整查询把今天的学习链串起来。</p></div>
+                <span class="minutes">10 MIN</span>
+              </header>
+              <div class="query-card">
+                <div class="query-meta">
+                  <small>TEACHER DEMO</small>
+                  <h3>查看 2026-08-31 已支付订单</h3>
+                  <p>这条查询只回答本地教学表中的一个样本问题，不回答收入是否正确。</p>
+                </div>
+                <div>
+                  <pre>SELECT order_id, user_id, status, paid_at AS paid_time
+FROM orders
+WHERE status = "paid"
+  AND paid_at &gt;= "2026-08-31"
+  AND paid_at &lt; "2026-09-01"
+ORDER BY paid_at DESC
+LIMIT 5;</pre>
+                  <div class="result-table">
+                    <table>
+                      <thead><tr><th>order_id</th><th>user_id</th><th>status</th><th>paid_time</th></tr></thead>
+                      <tbody>
+                        <tr><td>O1018</td><td>U015</td><td>paid</td><td>2026-08-31 23:30</td></tr>
+                        <tr><td>O1017</td><td>U014</td><td>paid</td><td>2026-08-31 21:11</td></tr>
+                        <tr><td>O1016</td><td>NULL</td><td>paid</td><td>2026-08-31 20:20</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="checkpoint"><h3>复述量规</h3><p>按 query_id → business_question → FROM → WHERE → SELECT/AS → ORDER BY → observed_result → cannot_prove 复述，不跳到 GROUP BY 或 JOIN。</p></div>
+            </section>
+
+            <section class="chapter">
+              <header class="chapter-head">
+                <div><small>SESSION 02 · CHAPTER 05</small><h2>操作模型：6 道基础查询练习台</h2><p>先做正向任务，再看常见错误。每题都要留下 SQL 和一句结果边界。</p></div>
+                <span class="minutes">18 MIN</span>
+              </header>
+              <div class="lab-panel">
+                <h3>六道题的设计</h3>
+                <div class="six-queries">
+                  <article><h4>Q1 已支付订单</h4><p>学习 WHERE 文本值。</p><code>WHERE status = "paid"</code></article>
+                  <article><h4>Q2 app 渠道订单</h4><p>学习文本值引号和字段值。</p><code>WHERE channel = "app"</code></article>
+                  <article><h4>Q3 某天支付订单</h4><p>学习日期起点和结束边界。</p><code>paid_at &gt;= "2026-08-31" AND paid_at &lt; "2026-09-01"</code></article>
+                  <article><h4>Q4 最近支付订单</h4><p>学习 ORDER BY DESC。</p><code>ORDER BY paid_at DESC LIMIT 5</code></article>
+                  <article><h4>Q5 可读列名</h4><p>学习 AS 只改展示列名。</p><code>paid_at AS paid_time</code></article>
+                  <article><h4>Q6 渠道取值观察</h4><p>学习 DISTINCT 只做去重展示。</p><code>SELECT DISTINCT channel FROM orders</code></article>
+                </div>
+              </div>
+            </section>
+
+            <section class="chapter">
+              <header class="chapter-head">
+                <div><small>SESSION 02 · CHAPTER 06</small><h2>责任与证据边界：先修常见误判</h2><p>纠错放在学会正向查询之后。每个错误都要定位到字段或 SQL 动作。</p></div>
+                <span class="minutes">14 MIN</span>
+              </header>
+              <div class="boundary">
+                <h3>看到这些问题时，最多判断到哪里</h3>
+                <div class="boundary-grid">
+                  <div><b>问题太模糊</b><p>“查订单”不能执行。先补 business_question 和 query_id。</p></div>
+                  <div><b>日期只写等于</b><p>paid_at 带小时分钟，应用起止边界，不用模糊当天。</p></div>
+                  <div><b>文本值没引号</b><p>channel = app 会被误读；文本值写成 "app"。</p></div>
+                  <div><b>没排序说最新</b><p>没有 ORDER BY DESC，不能说第一行就是最新。</p></div>
+                  <div><b>别名无意义</b><p>paid_at AS x 不利于交接；改成 paid_time。</p></div>
+                  <div><b>DISTINCT 越界</b><p>DISTINCT channel 不等于渠道订单数或指标口径。</p></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="chapter">
+              <header class="chapter-head">
+                <div><small>SESSION 02 · CHAPTER 07</small><h2>实验、成果与最终复述</h2><p>最后把 6 道题沉淀成两个文件：SQL 文件保存可执行查询，记录文件保存问题、观察和边界。</p></div>
+                <span class="minutes">20 MIN</span>
+              </header>
+              <div class="deliverable">
+                <h3>今日成果：basic-sql-queries.sql + basic-query-log.md</h3>
+                <pre>query_id: Q3_paid_orders_on_20260831
+business_question: 查看 2026-08-31 本地 orders 表中已支付订单样本
+sql_text: SELECT order_id, user_id, paid_at AS paid_time FROM orders ...
+observed_result: 看到 paid_time 在 2026-08-31 范围内的样本行
+can_prove: 这条基础查询的 WHERE、日期边界、别名和排序可复核
+cannot_prove: 不能证明真实生产收入、数据质量、聚合、GROUP BY、JOIN 或指标正确
+self_check_result: self_check.sql 对照通过；未提前打开 answers.sql
+next_sql_task: W3D4 数据质量检查</pre>
+                <div class="log-grid">
+                  <div><b>basic-sql-queries.sql</b>只放 6 条可执行查询，保持单表 orders，不混入聚合和 JOIN。</div>
+                  <div><b>basic-query-log.md</b>逐条记录业务问题、观察结果、能证明和不能证明什么。</div>
+                </div>
+              </div>
+              <div class="checkpoint"><h3>最终复述</h3><p>闭卷写一条：从 orders 查某天 paid 订单，输出三个列，给 paid_at 起别名，按 paid_at DESC 排序，并写 cannot_prove。</p></div>
+            </section>
+          </div>
+        </main>
+
+        <aside class="route">
+          <div class="route-head"><strong>七章学习路线</strong><span>12%</span></div>
+          <div class="route-list">
+            <div class="route-item current"><small>01 · 时段 1</small><b>建立任务：先看见今天要查的对象</b><div class="states"><span>学习</span><span>练习</span><span>复述</span></div></div>
+            <div class="route-item"><small>02 · 时段 1</small><b>模型一：从业务问题到 WHERE 条件</b><div class="states"><span>学习</span><span>练习</span><span>复述</span></div></div>
+            <div class="route-item"><small>03 · 时段 1</small><b>模型二：结果如何变得可读</b><div class="states"><span>学习</span><span>练习</span><span>复述</span></div></div>
+            <div class="route-item"><small>04 · 时段 1</small><b>第一次复述：一条查询从问题到边界</b><div class="states"><span>学习</span><span>练习</span><span>复述</span></div></div>
+            <div class="route-item"><small>05 · 时段 2</small><b>操作模型：6 道基础查询练习台</b><div class="states"><span>学习</span><span>练习</span><span>复述</span></div></div>
+            <div class="route-item"><small>06 · 时段 2</small><b>责任与证据边界：先修常见误判</b><div class="states"><span>学习</span><span>练习</span><span>复述</span></div></div>
+            <div class="route-item"><small>07 · 时段 2</small><b>实验、成果与最终复述</b><div class="states"><span>学习</span><span>练习</span><span>复述</span></div></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

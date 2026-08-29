@@ -1,0 +1,5 @@
+validation_id,date,hypothesis,input_or_version,method,expected,actual,evidence_path,result,next_action
+V001,,,,SQL,,,,,
+V002,,,,Python,,,,,
+V003,,,,API验收,,,,,
+V004,,,,AI评测,,,,,

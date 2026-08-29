@@ -1,0 +1,13 @@
+原始行数: 15
+清洁行数: 6
+隔离行数: 9
+行数守恒: True
+质量规则已实现: True
+总体自检通过: True
+issue_missing_order_id: 0
+issue_duplicate_order: 2
+issue_missing_user: 1
+issue_invalid_status: 1
+issue_invalid_amount: 3
+issue_invalid_paid_time: 1
+issue_invalid_channel: 1

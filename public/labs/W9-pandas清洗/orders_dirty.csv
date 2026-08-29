@@ -1,0 +1,16 @@
+order_id,user_id,status,paid_amount,paid_at,channel
+O001,U01,paid,89.00,2026-10-12 09:10:00,app
+O002,U02,paid,129.50,2026-10-12 09:20:00,web
+O003,,paid,59.00,2026-10-12 10:00:00,app
+O004,U04,cancelled,39.00,,miniapp
+O005,U05,paid,-20.00,2026-10-12 11:00:00,web
+O006,U06,paid,bad,2026-10-12 12:00:00,app
+O007,U07,unknown,79.00,2026-10-12 13:00:00,app
+O008,U08,paid,199.00,not-a-date,miniapp
+O009,U09,refunded,99.00,2026-10-12 14:00:00,web
+O010,U10,paid,49.00,2026-10-12 15:00:00,app
+O010,U10,paid,49.00,2026-10-12 15:00:00,app
+O011,U11,pending,69.00,2026-10-12 16:00:00,miniapp
+O012,U12,paid,,2026-10-12 17:00:00,web
+O013,U13,paid,89.00,2026-10-12 18:00:00,unknown
+O014,U14,paid,109.00,2026-10-12 19:00:00,app

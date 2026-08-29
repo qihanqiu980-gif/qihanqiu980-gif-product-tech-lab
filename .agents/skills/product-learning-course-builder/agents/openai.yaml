@@ -1,0 +1,4 @@
+interface:
+  display_name: "产品技术课程生成器"
+  short_description: "按 Day 01 七章体系逐日生产并验收课程"
+  default_prompt: "Use $product-learning-course-builder to build or revise exactly one specified Day with the Day 01 seven-chapter framework, independent preview access, formal evidence, and full validation."

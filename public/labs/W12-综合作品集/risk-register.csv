@@ -1,0 +1,6 @@
+risk_id,risk,category,probability_1_5,impact_1_5,trigger_or_monitor,prevention,fallback,owner,status
+R001,数据口径不一致,数据,,,,,,,未评估
+R002,接口超时或重复提交,稳定性,,,,,,,未评估
+R003,权限或隐私泄露,安全,,,,,,,未评估
+R004,AI幻觉或越权动作,AI安全,,,,,,,未评估
+R005,成本或延迟不可接受,商业与体验,,,,,,,未评估

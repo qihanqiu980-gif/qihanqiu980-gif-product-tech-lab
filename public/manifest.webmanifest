@@ -1,0 +1,9 @@
+{
+  "name": "产品技术实验室",
+  "short_name": "技术实验室",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#eef1f2",
+  "theme_color": "#12334a",
+  "lang": "zh-CN"
+}

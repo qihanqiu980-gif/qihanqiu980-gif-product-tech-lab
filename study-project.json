@@ -1,0 +1,12 @@
+{
+  "schema_version": 2,
+  "name": "产品经理技术与AI能力",
+  "language": "zh-CN",
+  "created_at": "2026-08-12T21:00:51+08:00",
+  "updated_at": "2026-08-21T23:42:29+08:00",
+  "active_session_id": null,
+  "question_policy": {
+    "one_question_per_turn": true,
+    "require_application": true
+  }
+}
