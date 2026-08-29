@@ -46,6 +46,7 @@ const plannedTitles: Partial<Record<DayId, string>> = {
   W4D2: '聚合与分组入门',
   W4D3: '活跃、转化与客单价',
   W4D4: '三种上涨假象',
+  W5D3: '连接用户、行为与订单',
   W8D1: '程序如何表达步骤',
   W8D2: '从输入到输出',
   W8D6: '生成每日业务摘要',

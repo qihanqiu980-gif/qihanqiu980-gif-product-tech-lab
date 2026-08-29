@@ -708,6 +708,56 @@ function validateW5D2Evidence(lesson: DailyCourse): readonly string[] {
   return issues
 }
 
+function validateW5D3Experiment(lesson: DailyCourse): readonly string[] {
+  const required = [
+    'source-table-map',
+    'join-chain-grain',
+    'step-row-count-audit',
+    'step-unique-key-audit',
+    'step-amount-audit',
+    'null-link-gap-audit',
+    'exercise-boundary',
+    'multi-table-sql-log',
+  ]
+  const issues: string[] = []
+  if (lesson.id !== 'W5D3') issues.push(`实验仅适配 W5D3，实际课程为 ${lesson.id}。`)
+  const guidedMissing = required.filter((id) => !new Set(lesson.guidedLab.conceptIds).has(id))
+  if (guidedMissing.length) issues.push(`多表 SQL 引导实验缺少概念：${guidedMissing.join('、')}。`)
+  const independentRequired = ['join-chain-grain', 'step-row-count-audit', 'step-unique-key-audit', 'step-amount-audit', 'null-link-gap-audit', 'exercise-boundary', 'multi-table-sql-log']
+  const independentMissing = independentRequired.filter((id) => !new Set(lesson.independentLab.conceptIds).has(id))
+  if (independentMissing.length) issues.push(`多表 SQL 独立变式缺少概念：${independentMissing.join('、')}。`)
+  const serialized = JSON.stringify({ guidedLab: lesson.guidedLab, independentLab: lesson.independentLab, demonstration: lesson.demonstration, diagram: lesson.diagram, deliverable: lesson.deliverable, memory: lesson.memory })
+  for (const phrase of ['multi-table-sql-log.md', 'step_id', 'source_sql_ref', 'left_table', 'right_table', 'join_type', 'join_key', 'rows_before', 'rows_after', 'unique_keys', 'amount_before', 'amount_after', 'gap_note', 'can_prove', 'cannot_prove', 'next_sql_task', 'setup.sql', 'exercises.sql', 'answers.sql', 'users', 'events', 'orders', '教学模拟', '不能证明']) {
+    if (!serialized.includes(phrase)) issues.push(`W5D3 多表 SQL 观察器缺少必测路径或边界：${phrase}。`)
+  }
+  for (const forbidden of ['真实生产结论已经证明', 'JOIN 已经完成', '看板已经可发布', 'W5D3 已经完成']) {
+    if (serialized.includes(forbidden)) issues.push(`W5D3 不得提前教授或越界声明：${forbidden}。`)
+  }
+  return issues
+}
+
+function validateW5D3Evidence(lesson: DailyCourse): readonly string[] {
+  const issues: string[] = []
+  if (lesson.id !== 'W5D3') issues.push(`证据适配器仅适配 W5D3，实际课程为 ${lesson.id}。`)
+  if (!lesson.exercises.every((exercise) => exercise.id.startsWith('w5d3-'))) issues.push('W5D3 证据适配器要求练习 ID 使用 w5d3- 前缀。')
+  if (lesson.title !== '连接用户、行为与订单') issues.push('W5D3 课程标题必须是“连接用户、行为与订单”。')
+  if (lesson.deliverable.title !== '多表 SQL 记录') issues.push('W5D3 今日成果必须是“多表 SQL 记录”。')
+  if (lesson.nextLesson?.id !== 'W5D4') issues.push('W5D3 只能说明下一课 W5D4，不得创建或替代其内容。')
+  if (lesson.memory.reviewStages.map((stage) => stage.stage).join('/') !== 'D1/D3/D7/D14/D30/D60') issues.push('W5D3 复习排程必须覆盖六个阶段。')
+  const deliverable = JSON.stringify(lesson.deliverable)
+  for (const phrase of ['step_id', 'source_sql_ref', 'left_table', 'right_table', 'join_type', 'join_key', 'rows_before', 'rows_after', 'unique_keys', 'amount_before', 'amount_after', 'gap_note', 'can_prove', 'cannot_prove', 'next_sql_task']) {
+    if (!deliverable.includes(phrase)) issues.push(`W5D3 成果合同缺少字段：${phrase}。`)
+  }
+  for (const phrase of ['multi-table-sql-log.md', 'setup.sql', 'exercises.sql', 'answers.sql', 'users', 'events', 'orders', '不能证明']) {
+    if (!deliverable.includes(phrase)) issues.push(`W5D3 成果合同缺少路径、边界或交接：${phrase}。`)
+  }
+  const safeDeliverable = [lesson.deliverable.goodExample, lesson.deliverable.standardTemplate, lesson.deliverable.checklist.join('\n')].join('\n')
+  for (const forbidden of ['真实生产结论已经证明', 'JOIN 已经完成', '看板已经可发布', 'W5D3 已经完成']) {
+    if (safeDeliverable.includes(forbidden)) issues.push(`W5D3 不得越界声明：${forbidden}。`)
+  }
+  return issues
+}
+
 function validateW8D1Experiment(lesson: DailyCourse): readonly string[] {
   const required = [
     'python-runtime-boundary',
@@ -1680,6 +1730,21 @@ const w5d2EvidenceAdapter = Object.freeze({
   kind: 'evidence', key: 'w5d2-evidence-v2', dayId: 'W5D2', schemaVersion: 2, validateLesson: validateW5D2Evidence,
 } as const satisfies DailyCourseEvidenceAdapter)
 
+const w5d3Renderer = Object.freeze({
+  kind: 'renderer',
+  key: 'day01-framework-w5d3',
+  dayId: 'W5D3',
+  load: () => import('../views/W5D3Page.vue'),
+} as const satisfies DailyCourseRendererImplementation)
+
+const w5d3ExperimentAdapter = Object.freeze({
+  kind: 'experiment', key: 'multi-table-sql-observer-day01-v1', dayId: 'W5D3', validateLesson: validateW5D3Experiment,
+} as const satisfies DailyCourseExperimentAdapter)
+
+const w5d3EvidenceAdapter = Object.freeze({
+  kind: 'evidence', key: 'w5d3-evidence-v2', dayId: 'W5D3', schemaVersion: 2, validateLesson: validateW5D3Evidence,
+} as const satisfies DailyCourseEvidenceAdapter)
+
 const w8d1Renderer = Object.freeze({
   kind: 'renderer',
   key: 'day01-framework-w8d1',
@@ -1953,6 +2018,13 @@ const implementationEntries = [
     renderer: w5d2Renderer,
     experimentAdapter: w5d2ExperimentAdapter,
     evidenceAdapter: w5d2EvidenceAdapter,
+    reviewed: true,
+  },
+  {
+    dayId: 'W5D3',
+    renderer: w5d3Renderer,
+    experimentAdapter: w5d3ExperimentAdapter,
+    evidenceAdapter: w5d3EvidenceAdapter,
     reviewed: true,
   },
   {
