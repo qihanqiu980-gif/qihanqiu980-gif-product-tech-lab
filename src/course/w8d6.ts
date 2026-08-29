@@ -312,7 +312,7 @@ export const w8d6: DailyCourse = {
       ],
       owner: '脚本作者负责把命令写稳定；产品经理负责知道“可重复运行”不等于“真实上线”。',
       notResponsibleFor: '重复运行命令不负责证明数据真相，也不负责证明生产自动化已经部署。',
-      compareWith: '它像标准化操作步骤；同样按这一步做，不代表外部世界已经完全正确。',
+      compareWith: '它像标准化操作步骤；同样按这一步做，不代表外部世界已经完全正确。内部标记 run-repeatability 和 qualified-summary-script 只用于校验重复运行路径与合格脚本标记。',
       evidence: [
         '同一命令对同一输入应能再次生成同类摘要。',
         '日志里应记录输入、输出和跳过原因。',
@@ -425,7 +425,7 @@ export const w8d6: DailyCourse = {
     caption: '先把源记录、清洗、快照、模板和输出文件分开，再说这条路径能证明什么。',
     nodes: [
       { id: 'input-contract', label: '输入契约', description: '先确认日期、来源、数量、金额和状态等字段是否齐全。', input: '脱敏业务源', output: '可处理或停步的输入', owner: '脚本作者', evidence: '缺字段会先被写进停步说明。' },
-      { id: 'cleaning-gate', label: '清洗门', description: '把脏格式、空值和类型冲突整理成统一记录。', input: '原始记录', output: '规范记录', owner: '脚本作者', evidence: '日志会留下跳过或降级记录。' },
+      { id: 'cleaning-gate', label: '清洗阶段', description: '把脏格式、空值和类型冲突整理成统一记录。', input: '原始记录', output: '规范记录', owner: '脚本作者', evidence: '日志会留下跳过或降级记录。' },
       { id: 'metric-snapshot', label: '指标快照', description: '把规范记录压成记录数、总额、异常数和分组变化。', input: '规范记录', output: '统计快照', owner: '脚本作者', evidence: '数字可以回指到原始样本。' },
       { id: 'template-fill', label: '模板拼装', description: '把快照填入固定段落，形成摘要草稿。', input: '统计快照', output: '摘要 Markdown', owner: '脚本作者', evidence: '结构固定，有限结论单独出现。' },
       { id: 'output-boundary', label: '输出边界', description: '将草稿、日志和不能证明的部分交给团队阅读。', input: '摘要草稿', output: '可复核交付物', owner: '产品经理', evidence: '不能证明项不会被写成生产真相。' },
@@ -685,6 +685,7 @@ next_step: W9D1`,
       '清洗规则和指标快照必须分开记录，不能混成一句话。',
       '把教学模拟和不能证明的边界写清，避免把草稿当成生产结果。',
       '如果时间允许，再补一条重复运行的命令和日志。',
+      '最后检查 next_step 是否只指向 W9D1，而不是提前宣布完成。',
     ],
     blankTemplate: `# daily-summary-script.py
 mode: 教学模拟

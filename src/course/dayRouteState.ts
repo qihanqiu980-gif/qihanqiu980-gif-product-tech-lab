@@ -49,6 +49,7 @@ const plannedTitles: Partial<Record<DayId, string>> = {
   W8D1: '程序如何表达步骤',
   W8D2: '从输入到输出',
   W8D6: '生成每日业务摘要',
+  W9D3: '清洗订单',
 }
 
 export function getDailyCourseRouteState(dayId: DayId): DailyCourseRouteState {

@@ -213,7 +213,7 @@ function validateW3D1Experiment(lesson: DailyCourse): readonly string[] {
     const missing = required.filter((id) => !new Set(ids).has(id))
     if (missing.length) issues.push(`${label}缺少概念：${missing.join('、')}。`)
   }
-  const serialized = JSON.stringify({ guidedLab: lesson.guidedLab, independentLab: lesson.independentLab, demonstration: lesson.demonstration, diagram: lesson.diagram })
+  const serialized = JSON.stringify({ guidedLab: lesson.guidedLab, independentLab: lesson.independentLab, demonstration: lesson.demonstration, diagram: lesson.diagram, deliverable: lesson.deliverable })
   for (const phrase of ['当前目录', '只读素材', 'sqlite3', 'setup.sql', 'orders 表', '教学模拟', '不能证明']) {
     if (!serialized.includes(phrase)) issues.push(`W3D1 SQLite 环境观察器缺少必测路径或边界：${phrase}。`)
   }
@@ -660,6 +660,54 @@ function validateW4D4Evidence(lesson: DailyCourse): readonly string[] {
   return issues
 }
 
+function validateW5D2Experiment(lesson: DailyCourse): readonly string[] {
+  const required = [
+    'join-key-matching',
+    'join-preserve-rule',
+    'inner-join-filter',
+    'left-join-preserve-left',
+    'right-join-preserve-right',
+    'full-join-preserve-both',
+    'join-grain-amplification',
+    'anti-join-gap-audit',
+    'join-audit-map',
+  ]
+  const issues: string[] = []
+  if (lesson.id !== 'W5D2') issues.push(`实验仅适配 W5D2，实际课程为 ${lesson.id}。`)
+  const guidedMissing = required.filter((id) => !new Set(lesson.guidedLab.conceptIds).has(id))
+  if (guidedMissing.length) issues.push(`JOIN 对照引导实验缺少概念：${guidedMissing.join('、')}。`)
+  const independentRequired = ['join-preserve-rule', 'left-join-preserve-left', 'anti-join-gap-audit', 'join-audit-map']
+  const independentMissing = independentRequired.filter((id) => !new Set(lesson.independentLab.conceptIds).has(id))
+  if (independentMissing.length) issues.push(`JOIN 对账独立变式缺少概念：${independentMissing.join('、')}。`)
+  const serialized = JSON.stringify({ guidedLab: lesson.guidedLab, independentLab: lesson.independentLab, demonstration: lesson.demonstration, diagram: lesson.diagram, deliverable: lesson.deliverable, memory: lesson.memory })
+  for (const phrase of ['W5-JOIN对账', 'reconciliation.md', '440', '740', 'O05', 'I08', 'LEFT JOIN', 'FULL JOIN', '先聚合再连接', '教学模拟', '不能证明']) {
+    if (!serialized.includes(phrase)) issues.push(`W5D2 JOIN 对照观察器缺少必测路径或边界：${phrase}。`)
+  }
+  return issues
+}
+
+function validateW5D2Evidence(lesson: DailyCourse): readonly string[] {
+  const issues: string[] = []
+  if (lesson.id !== 'W5D2') issues.push(`证据适配器仅适配 W5D2，实际课程为 ${lesson.id}。`)
+  if (!lesson.exercises.every((exercise) => exercise.id.startsWith('w5d2-'))) issues.push('W5D2 证据适配器要求练习 ID 使用 w5d2- 前缀。')
+  if (lesson.title !== '四种 JOIN 保留规则') issues.push('W5D2 课程标题必须是“四种 JOIN 保留规则”。')
+  if (lesson.deliverable.title !== 'JOIN 对账记录') issues.push('W5D2 今日成果必须是“JOIN 对账记录”。')
+  if (lesson.nextLesson?.id !== 'W5D3') issues.push('W5D2 只能说明下一课 W5D3，不得创建或替代其内容。')
+  if (lesson.memory.reviewStages.map((stage) => stage.stage).join('/') !== 'D1/D3/D7/D14/D30/D60') issues.push('W5D2 复习排程必须覆盖六个阶段。')
+  const deliverable = JSON.stringify(lesson.deliverable)
+  for (const phrase of ['join_case_id', 'left_table', 'right_table', 'join_type', 'preserve_rule', 'join_key', 'rows_before', 'rows_after', 'unique_keys', 'unmatched_keys', 'amount_gap', 'can_prove', 'cannot_prove', 'next_sql_task']) {
+    if (!deliverable.includes(phrase)) issues.push(`W5D2 成果合同缺少字段：${phrase}。`)
+  }
+  for (const phrase of ['W5-JOIN对账', 'reconciliation.md', 'JOIN 对照图', '正确 GMV', '错误 GMV', 'O05', 'I08', '先聚合再连接', '不能证明']) {
+    if (!deliverable.includes(phrase)) issues.push(`W5D2 成果合同缺少路径、边界或交接：${phrase}。`)
+  }
+  const safeDeliverable = [lesson.deliverable.goodExample, lesson.deliverable.standardTemplate, lesson.deliverable.checklist.join('\n')].join('\n')
+  for (const forbidden of ['真实生产 GMV 已经证明', 'JOIN 已经完成', '看板已经可发布', 'W5D3 已经完成']) {
+    if (safeDeliverable.includes(forbidden)) issues.push(`W5D2 不得越界声明：${forbidden}。`)
+  }
+  return issues
+}
+
 function validateW8D1Experiment(lesson: DailyCourse): readonly string[] {
   const required = [
     'python-runtime-boundary',
@@ -807,6 +855,55 @@ function validateW8D6Evidence(lesson: DailyCourse): readonly string[] {
   const safeDeliverable = [lesson.deliverable.goodExample, lesson.deliverable.standardTemplate, lesson.deliverable.checklist.join('\n')].join('\n')
   for (const forbidden of ['真实生产已经证明', '生产调度已经自动化', 'JSON已完成', 'CSV已完成']) {
     if (safeDeliverable.includes(forbidden)) issues.push(`W8D6 不得越界声明：${forbidden}。`)
+  }
+  return issues
+}
+
+function validateW9D3Experiment(lesson: DailyCourse): readonly string[] {
+  const required = [
+    'orders-data-contract',
+    'data-quality-snapshot',
+    'pandas-copy-and-coerce',
+    'issue-flag-columns',
+    'clean-vs-quarantine-split',
+    'rule-impact-log',
+    'reconciliation-check',
+    'order-cleaning-script',
+  ]
+  const issues: string[] = []
+  if (lesson.id !== 'W9D3') issues.push(`实验仅适配 W9D3，实际课程为 ${lesson.id}。`)
+  for (const [label, ids] of [['订单清洗引导观察器', lesson.guidedLab.conceptIds], ['订单清洗独立变式', lesson.independentLab.conceptIds]] as const) {
+    const missing = required.filter((id) => !new Set(ids).has(id))
+    if (missing.length) issues.push(`${label}缺少概念：${missing.join('、')}。`)
+  }
+  const serialized = JSON.stringify({ guidedLab: lesson.guidedLab, independentLab: lesson.independentLab, demonstration: lesson.demonstration, diagram: lesson.diagram })
+  for (const phrase of ['orders_dirty.csv', 'quality_rules', 'issue_flags', 'clean_output', 'quarantine_output', 'rule_log', 'reconciliation_summary', 'clean_orders.py', '教学模拟', '不能证明']) {
+    if (!serialized.includes(phrase)) issues.push(`W9D3 订单清洗观察器缺少必测路径、字段或边界：${phrase}。`)
+  }
+  for (const forbidden of ['真实生产已经正确', '生产数据已经完全正确', '规则无争议', '坏行已经删除']) {
+    if (serialized.includes(forbidden)) issues.push(`W9D3 不得提前教授或越界声明：${forbidden}。`)
+  }
+  return issues
+}
+
+function validateW9D3Evidence(lesson: DailyCourse): readonly string[] {
+  const issues: string[] = []
+  if (lesson.id !== 'W9D3') issues.push(`证据适配器仅适配 W9D3，实际课程为 ${lesson.id}。`)
+  if (!lesson.exercises.every((exercise) => exercise.id.startsWith('w9d3-'))) issues.push('W9D3 证据适配器要求练习 ID 使用 w9d3- 前缀。')
+  if (lesson.title !== '清洗订单') issues.push('W9D3 课程标题必须是“清洗订单”。')
+  if (lesson.deliverable.title !== '清洗脚本') issues.push('W9D3 今日成果必须是“清洗脚本”。')
+  if (lesson.nextLesson?.id !== 'W9D4') issues.push('W9D3 只能说明下一课 W9D4，不得创建或替代其内容。')
+  if (lesson.memory.reviewStages.map((stage) => stage.stage).join('/') !== 'D1/D3/D7/D14/D30/D60') issues.push('W9D3 复习排程必须覆盖六个阶段。')
+  const deliverable = JSON.stringify(lesson.deliverable)
+  for (const phrase of ['clean_orders.py', 'script_id', 'source_file', 'quality_rules', 'issue_flags', 'clean_output', 'quarantine_output', 'rule_log', 'reconciliation_summary', 'can_prove', 'cannot_prove', 'next_step']) {
+    if (!deliverable.includes(phrase)) issues.push(`W9D3 成果合同缺少字段或文件名：${phrase}。`)
+  }
+  for (const phrase of ['orders_dirty.csv', 'orders_clean.csv', 'orders_quarantine.csv', 'quality_report.md', '教学模拟', 'W9D4', '不能证明']) {
+    if (!deliverable.includes(phrase)) issues.push(`W9D3 成果合同缺少流程路径、边界或交接：${phrase}。`)
+  }
+  const safeDeliverable = [lesson.deliverable.goodExample, lesson.deliverable.standardTemplate, lesson.deliverable.checklist.join('\n')].join('\n')
+  for (const forbidden of ['真实生产已经证明', '生产数据已经完全正确', '规则无争议', '坏行已经删除']) {
+    if (safeDeliverable.includes(forbidden)) issues.push(`W9D3 不得越界声明：${forbidden}。`)
   }
   return issues
 }
@@ -1568,6 +1665,21 @@ const w4d4EvidenceAdapter = Object.freeze({
   kind: 'evidence', key: 'w4d4-evidence-v2', dayId: 'W4D4', schemaVersion: 2, validateLesson: validateW4D4Evidence,
 } as const satisfies DailyCourseEvidenceAdapter)
 
+const w5d2Renderer = Object.freeze({
+  kind: 'renderer',
+  key: 'day01-framework-w5d2',
+  dayId: 'W5D2',
+  load: () => import('../views/W5D2Page.vue'),
+} as const satisfies DailyCourseRendererImplementation)
+
+const w5d2ExperimentAdapter = Object.freeze({
+  kind: 'experiment', key: 'join-preserve-observer-day01-v1', dayId: 'W5D2', validateLesson: validateW5D2Experiment,
+} as const satisfies DailyCourseExperimentAdapter)
+
+const w5d2EvidenceAdapter = Object.freeze({
+  kind: 'evidence', key: 'w5d2-evidence-v2', dayId: 'W5D2', schemaVersion: 2, validateLesson: validateW5D2Evidence,
+} as const satisfies DailyCourseEvidenceAdapter)
+
 const w8d1Renderer = Object.freeze({
   kind: 'renderer',
   key: 'day01-framework-w8d1',
@@ -1611,6 +1723,21 @@ const w8d6ExperimentAdapter = Object.freeze({
 
 const w8d6EvidenceAdapter = Object.freeze({
   kind: 'evidence', key: 'w8d6-evidence-v2', dayId: 'W8D6', schemaVersion: 2, validateLesson: validateW8D6Evidence,
+} as const satisfies DailyCourseEvidenceAdapter)
+
+const w9d3Renderer = Object.freeze({
+  kind: 'renderer',
+  key: 'day01-framework-w9d3',
+  dayId: 'W9D3',
+  load: () => import('../views/W9D3Page.vue'),
+} as const satisfies DailyCourseRendererImplementation)
+
+const w9d3ExperimentAdapter = Object.freeze({
+  kind: 'experiment', key: 'order-cleaning-observer-day01-v1', dayId: 'W9D3', validateLesson: validateW9D3Experiment,
+} as const satisfies DailyCourseExperimentAdapter)
+
+const w9d3EvidenceAdapter = Object.freeze({
+  kind: 'evidence', key: 'w9d3-evidence-v2', dayId: 'W9D3', schemaVersion: 2, validateLesson: validateW9D3Evidence,
 } as const satisfies DailyCourseEvidenceAdapter)
 
 const w11d1ExperimentAdapter = Object.freeze({
@@ -1822,6 +1949,13 @@ const implementationEntries = [
     reviewed: true,
   },
   {
+    dayId: 'W5D2',
+    renderer: w5d2Renderer,
+    experimentAdapter: w5d2ExperimentAdapter,
+    evidenceAdapter: w5d2EvidenceAdapter,
+    reviewed: true,
+  },
+  {
     dayId: 'W8D1',
     renderer: w8d1Renderer,
     experimentAdapter: w8d1ExperimentAdapter,
@@ -1840,6 +1974,13 @@ const implementationEntries = [
     renderer: w8d6Renderer,
     experimentAdapter: w8d6ExperimentAdapter,
     evidenceAdapter: w8d6EvidenceAdapter,
+    reviewed: true,
+  },
+  {
+    dayId: 'W9D3',
+    renderer: w9d3Renderer,
+    experimentAdapter: w9d3ExperimentAdapter,
+    evidenceAdapter: w9d3EvidenceAdapter,
     reviewed: true,
   },
   {

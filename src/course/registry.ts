@@ -14,9 +14,11 @@ import { w4d1 } from './w4d1.ts'
 import { w4d2 } from './w4d2.ts'
 import { w4d3 } from './w4d3.ts'
 import { w4d4 } from './w4d4.ts'
+import { w5d2 } from './w5d2.ts'
 import { w8d1 } from './w8d1.ts'
 import { w8d2 } from './w8d2.ts'
 import { w8d6 } from './w8d6.ts'
+import { w9d3 } from './w9d3.ts'
 import { w11d1 } from './w11d1.ts'
 import { w11d2 } from './w11d2.ts'
 import { w11d3 } from './w11d3.ts'
@@ -36,7 +38,7 @@ import { w12d6 } from './w12d6.ts'
  * intentionally excluded: a title and generated exercises must never make a
  * missing Day appear complete.
  */
-const dailyCourseEntries = [w1d1, w1d2, w1d3, w1d4, w1d5, w3d1, w3d2, w3d3, w3d4, w3d5, w3d6, w4d1, w4d2, w4d3, w4d4, w8d1, w8d2, w8d6, w11d1, w11d2, w11d3, w11d4, w11d5, w11d6, w12d1, w12d2, w12d3, w12d4, w12d5, w12d6] as const satisfies readonly DailyCourse[]
+const dailyCourseEntries = [w1d1, w1d2, w1d3, w1d4, w1d5, w3d1, w3d2, w3d3, w3d4, w3d5, w3d6, w4d1, w4d2, w4d3, w4d4, w5d2, w8d1, w8d2, w8d6, w9d3, w11d1, w11d2, w11d3, w11d4, w11d5, w11d6, w12d1, w12d2, w12d3, w12d4, w12d5, w12d6] as const satisfies readonly DailyCourse[]
 
 export const EXPECTED_DAY_IDS: readonly DayId[] = Object.freeze(
   Array.from({ length: 12 }, (_, weekIndex) =>
